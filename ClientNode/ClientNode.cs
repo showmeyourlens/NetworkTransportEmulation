@@ -48,11 +48,11 @@ namespace TSST_MPLS
                             cloudCommunicator.NODE_EMULATION_ADDRESS,
                             contact.receiverIPAddress,
                             cloudCommunicator.NODE_EMULATION_PORT);
-                        NetworkPackage networkPackage = NetworkPackage.CreateClientToClientMessage(
+                        NetworkPacket networkPacket = NetworkPacket.CreateClientToClientMessage(
                             addressPart,
                             "Very Important message",
                             contact.label);
-                        cloudCommunicator.Send(networkPackage);
+                        cloudCommunicator.Send(networkPacket);
                         Console.WriteLine("Message sent");
                     }
                     else

@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace ToolsLibrary
 {
     [Serializable()]
-    public class NetworkPackage : ISerializable
+    public class NetworkPacket : ISerializable
     {
         public AddressPart AddressPart { get; private set; }
         public MessageTypes MessageType { get; private set; }
@@ -21,22 +21,22 @@ namespace ToolsLibrary
             MGMTMessage
         }
 
-        private NetworkPackage()
+        private NetworkPacket()
         {
             this.LabelStack = new Stack<int>();
         }
 
-        public static NetworkPackage Clone(NetworkPackage networkPackage)
+        public static NetworkPacket Clone(NetworkPacket networkPacket)
         {
-            NetworkPackage result = new NetworkPackage
+            NetworkPacket result = new NetworkPacket
             {
-                AddressPart = networkPackage.AddressPart,
-                MessageType = networkPackage.MessageType,
-                Message = networkPackage.Message,
+                AddressPart = networkPacket.AddressPart,
+                MessageType = networkPacket.MessageType,
+                Message = networkPacket.Message,
                 LabelStack = new Stack<int>()
             };
 
-            int[] tempTable = networkPackage.LabelStack.ToArray();
+            int[] tempTable = networkPacket.LabelStack.ToArray();
             for (int i=0; i<tempTable.Length; i++)
             {
                 result.LabelStack.Push(tempTable[i]);
@@ -44,9 +44,9 @@ namespace ToolsLibrary
             return result;
         }
 
-        public static NetworkPackage CreateClientToClientMessage(AddressPart addressPart, string message, int startLabel)
+        public static NetworkPacket CreateClientToClientMessage(AddressPart addressPart, string message, int startLabel)
         {
-            NetworkPackage result = new NetworkPackage
+            NetworkPacket result = new NetworkPacket
             {
                 AddressPart = addressPart,
                 Message = message,
@@ -57,9 +57,9 @@ namespace ToolsLibrary
             return result;
         }
 
-        public static NetworkPackage CreateNodeHello(AddressPart addressPart)
+        public static NetworkPacket CreateNodeHello(AddressPart addressPart)
         {
-            NetworkPackage result = new NetworkPackage
+            NetworkPacket result = new NetworkPacket
             {
                 AddressPart = addressPart,
                 Message = "",
@@ -68,9 +68,9 @@ namespace ToolsLibrary
             return result;
         }
 
-        public static NetworkPackage CreateMGMTHello(AddressPart addressPart)
+        public static NetworkPacket CreateMGMTHello(AddressPart addressPart)
         {
-            NetworkPackage result = new NetworkPackage
+            NetworkPacket result = new NetworkPacket
             {
                 AddressPart = addressPart,
                 Message = "",
@@ -79,9 +79,9 @@ namespace ToolsLibrary
             return result;
         }
 
-        public static NetworkPackage CreateMGMTMessage(AddressPart addressPart, string message)
+        public static NetworkPacket CreateMGMTMessage(AddressPart addressPart, string message)
         {
-            NetworkPackage result = new NetworkPackage
+            NetworkPacket result = new NetworkPacket
             {
                 AddressPart = addressPart,
                 Message = message,
@@ -90,7 +90,7 @@ namespace ToolsLibrary
             return result;
         }
 
-        public NetworkPackage(SerializationInfo serializationInfo, StreamingContext context)
+        public NetworkPacket(SerializationInfo serializationInfo, StreamingContext context)
         {
             AddressPart = (AddressPart)serializationInfo.GetValue("addressPart", typeof(AddressPart));
             Message = (string)serializationInfo.GetValue("message", typeof(string));

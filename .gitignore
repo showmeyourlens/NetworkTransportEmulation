@@ -3,3 +3,11 @@
 ################################################################################
 
 /.vs/TSST_MPLS/v16
+/CableCloud/bin/
+/CableCloud/obj/
+/ClientNode/bin/
+/ClientNode/obj/
+/NetworkNode/bin/
+/NetworkNode/obj/
+/ToolsLibrary/bin/
+/ToolsLibrary/obj/
