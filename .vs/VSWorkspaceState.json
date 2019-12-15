@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\CableCloud",
+    "\\CableCloud\\bin",
+    "\\CableCloud\\bin\\Debug",
+    "\\CableCloud\\bin\\Debug\\netcoreapp3.0",
+    "\\ClientNode",
+    "\\ManagementSystem",
+    "\\ManagementSystem\\bin",
+    "\\ManagementSystem\\bin\\Debug"
+  ],
+  "SelectedNode": "\\ManagementSystem\\TargetNetworkObject.cs",
+  "PreviewInSolutionExplorer": false
+}

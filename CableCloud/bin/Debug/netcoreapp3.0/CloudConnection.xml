@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<root>
+	<Link firstObjectId="N1" firstObjectPort="10101" secondObjectId="C1" secondObjectPort="101">1</Link>
+	<Link firstObjectId="N1" firstObjectPort="10102" secondObjectId="N3" secondObjectPort="10302">2</Link>
+	<Link firstObjectId="N3" firstObjectPort="10303" secondObjectId="C2" secondObjectPort="203">3</Link>
+	<Link firstObjectId="N2" firstObjectPort="10204" secondObjectId="N3" secondObjectPort="10304">4</Link>
+	<Link firstObjectId="N1" firstObjectPort="10105" secondObjectId="N2" secondObjectPort="10205">5</Link>
+	<Link firstObjectId="N3" firstObjectPort="10306" secondObjectId="N4" secondObjectPort="10406">6</Link>
+	<Link firstObjectId="N1" firstObjectPort="10107" secondObjectId="N4" secondObjectPort="10407">7</Link>
+	<Link firstObjectId="N1" firstObjectPort="10108" secondObjectId="N5" secondObjectPort="10508">8</Link>
+	<Link firstObjectId="N4" firstObjectPort="10409" secondObjectId="N5" secondObjectPort="10509">9</Link>
+	<Link firstObjectId="N5" firstObjectPort="10510" secondObjectId="C4" secondObjectPort="410">10</Link>
+	<Link firstObjectId="N5" firstObjectPort="10511" secondObjectId="C3" secondObjectPort="311">11</Link>
+</root>

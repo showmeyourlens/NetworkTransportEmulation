@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "NetworkNode": {
+      "commandName": "Project",
+      "commandLineArgs": "\"62337\" \"N1\" \"167.15.64.182\""
+    }
+  }
+}

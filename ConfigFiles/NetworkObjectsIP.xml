@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<root>
+	<NodeIP ObjectId="C1" ObjectIP="121.32.232.31"></NodeIP>
+    <NodeIP ObjectId="C2" ObjectIP="171.18.151.27"></NodeIP>
+    <NodeIP ObjectId="C3" ObjectIP="148.58.132.21"></NodeIP>
+    <NodeIP ObjectId="C4" ObjectIP="132.41.56.205"></NodeIP>
+    <NodeIP ObjectId="N1" ObjectIP="167.15.64.182"></NodeIP>
+    <NodeIP ObjectId="N2" ObjectIP="196.221.13.245"></NodeIP>
+    <NodeIP ObjectId="N3" ObjectIP="197.25.131.29"></NodeIP>
+    <NodeIP ObjectId="N4" ObjectIP="191.27.135.99"></NodeIP>
+    <NodeIP ObjectId="N5" ObjectIP="187.83.2.221"></NodeIP>
+</root>
+

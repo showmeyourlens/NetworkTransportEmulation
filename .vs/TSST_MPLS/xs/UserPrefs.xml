@@ -1,0 +1,45 @@
+﻿<Properties StartupConfiguration="{48CD8259-4625-47B9-86BD-F9426DF9F2F5}|Default">
+  <MonoDevelop.Ide.ItemProperties.CableCloud.CableCloud PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="NetworkNode/NetworkNode.cs">
+    <Files>
+      <File FileName="ToolsLibrary/CloudCommunication.cs" Line="24" Column="35" />
+      <File FileName="NetworkNode/NodeCloudCommunication.cs" Line="7" Column="20" />
+      <File FileName="ClientNode/ClientNode.cs" Line="21" Column="111" />
+      <File FileName="CableCloud/CableCloud.cs" Line="79" Column="1" />
+      <File FileName="CableCloud/CloudConnectionsXMLReader.cs" Line="1" Column="1" />
+      <File FileName="ManagementSystem/ManagementSystem.cs" Line="1" Column="1" />
+      <File FileName="NetworkNode/RoutingInfo.cs" Line="18" Column="54" />
+      <File FileName="NetworkNode/FIBXMLReader.cs" Line="12" Column="32" />
+      <File FileName="NetworkNode/NetworkNode.cs" Line="20" Column="49" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="TSST_MPLS" expanded="True">
+            <Node name="CableCloud" expanded="True">
+              <Node name="CableCloud" expanded="True" />
+            </Node>
+            <Node name="ClientNode" expanded="True">
+              <Node name="ClientNode" expanded="True" />
+            </Node>
+            <Node name="ManagementSystem" expanded="True">
+              <Node name="ManagementSystem" expanded="True" />
+            </Node>
+            <Node name="NetworkNode" expanded="True">
+              <Node name="NetworkNode" expanded="True">
+                <Node name="NetworkNode.cs" selected="True" />
+              </Node>
+            </Node>
+            <Node name="ToolsLibrary" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
