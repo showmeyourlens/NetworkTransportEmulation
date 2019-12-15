@@ -18,7 +18,7 @@ namespace TSST_MPLS
         private Socket _server;
         private readonly IPAddress _cloudAddress;
         private readonly int _cloudPort;
-        private readonly CloudPacketProcessor _processor;
+        private readonly CloudPackageProcessor _processor;
 
         static void Main(string[] args)
         {
@@ -39,7 +39,7 @@ namespace TSST_MPLS
         {
             _cloudAddress = IPAddress.Parse("127.0.0.1");
             _cloudPort = 62572;
-            _processor = new CloudPacketProcessor();
+            _processor = new CloudPackageProcessor();
         }
 
         private void StartCloud()
@@ -87,8 +87,8 @@ namespace TSST_MPLS
                 ReceiverState receiverState = (ReceiverState)ar.AsyncState;
                 handler = receiverState.WorkSocket;
                 int bytesRead = handler.EndReceive(ar);
-                NetworkPacket received = Deserialize(receiverState, bytesRead);
-                ProcessorResponse processorResponse = _processor.ProcessPacketAndResponse(handler, received);
+                NetworkPackage received = Deserialize(receiverState, bytesRead);
+                ProcessorResponse processorResponse = _processor.ProcessPackageAndResponse(handler, received);
 
                 if (processorResponse.socketToSend != null)
                 {
@@ -97,7 +97,7 @@ namespace TSST_MPLS
                         if (socket != null)
                         {
                             _allDone.Reset();
-                            Send(socket, processorResponse.networkPacket);
+                            Send(socket, processorResponse.networkPackage);
                             _allDone.WaitOne();
                         }
                     }
@@ -115,29 +115,29 @@ namespace TSST_MPLS
             }
         }
 
-        private NetworkPacket Deserialize(ReceiverState receiverState, int byterRead)
+        private NetworkPackage Deserialize(ReceiverState receiverState, int byterRead)
         {
             using (var memoryStream = new MemoryStream())
             {
                 var bf = new BinaryFormatter();
                 memoryStream.Write(receiverState.Buffer, 0, byterRead);
                 memoryStream.Seek(0, SeekOrigin.Begin);
-                NetworkPacket obj = (NetworkPacket)bf.Deserialize(memoryStream);
+                NetworkPackage obj = (NetworkPackage)bf.Deserialize(memoryStream);
                 return obj;
             }
         }
 
-        public byte[] SerializeMessage(NetworkPacket networkPacket)
+        public byte[] SerializeMessage(NetworkPackage networkPackage)
         {
             BinaryFormatter bf = new BinaryFormatter();
             using (var memoryStream = new MemoryStream())
             {
-                bf.Serialize(memoryStream, networkPacket);
+                bf.Serialize(memoryStream, networkPackage);
                 return memoryStream.ToArray();
             }
         }
 
-        private void Send(Socket socket, NetworkPacket received)
+        private void Send(Socket socket, NetworkPackage received)
         {
             try
             {

@@ -7,12 +7,12 @@ using ToolsLibrary;
 
 namespace CableCloud
 {
-    public class CloudPacketProcessor
+    public class CloudPackageProcessor
     {
         private static string _THIS_COMPONENT_NAME = "Cloud";
         private List<TargetNetworkObject> _targetNetworkObjects;
 
-        public CloudPacketProcessor()
+        public CloudPackageProcessor()
         {
             CloudConnectionsXMLReader reader = new CloudConnectionsXMLReader();
             List<Link> networkLinks = reader.ReadCloudConnections();
@@ -20,31 +20,31 @@ namespace CableCloud
             reader.UpdateTargetsWithIPs(_targetNetworkObjects);
         }
 
-        public ProcessorResponse ProcessPacketAndResponse(Socket socket, NetworkPacket receivedPacket)
+        public ProcessorResponse ProcessPackageAndResponse(Socket socket, NetworkPackage receivedPackage)
         {
-            ProcessorResponse response = receivedPacket.MessageType switch
+            ProcessorResponse response = receivedPackage.MessageType switch
             {
-                NetworkPacket.MessageTypes.MGMTHelloMessage => ProcessHelloMessage(socket, receivedPacket),
-                NetworkPacket.MessageTypes.NodeHelloMessage => ProcessHelloMessage(socket, receivedPacket),
-                NetworkPacket.MessageTypes.ClientToClientMessage => ProcessClientToClientMessage(receivedPacket),
-                NetworkPacket.MessageTypes.MGMTMessage => ProcessMGMTMessage(socket, receivedPacket),
-                _ => ProcessorResponse.CreateDiscardingProcessorResponse(receivedPacket, "Unrecognised package type"),
+                NetworkPackage.MessageTypes.MGMTHelloMessage => ProcessHelloMessage(socket, receivedPackage),
+                NetworkPackage.MessageTypes.NodeHelloMessage => ProcessHelloMessage(socket, receivedPackage),
+                NetworkPackage.MessageTypes.ClientToClientMessage => ProcessClientToClientMessage(receivedPackage),
+                NetworkPackage.MessageTypes.MGMTMessage => ProcessMGMTMessage(socket, receivedPackage),
+                _ => ProcessorResponse.CreateDiscardingProcessorResponse(receivedPackage, "Unrecognised package type"),
             };
             return response;
         }
 
-        private ProcessorResponse ProcessHelloMessage(Socket socket, NetworkPacket receivedPacket)
+        private ProcessorResponse ProcessHelloMessage(Socket socket, NetworkPackage receivedPackage)
         {
             try
             {
-                if (receivedPacket.MessageType.Equals(NetworkPacket.MessageTypes.MGMTHelloMessage))
+                if (receivedPackage.MessageType.Equals(NetworkPackage.MessageTypes.MGMTHelloMessage))
                 {
-                    _targetNetworkObjects.Find(x => x.TargetObjectId == receivedPacket.AddressPart.SenderId).TargetSocket = socket;
+                    _targetNetworkObjects.Find(x => x.TargetObjectId == receivedPackage.AddressPart.SenderId).TargetSocket = socket;
                 }
                 else
                 {
                     // All objects where sender is the target need to be updated.
-                    var relatedTargetObjects = _targetNetworkObjects.FindAll(x => x.TargetObjectId.Equals(receivedPacket.AddressPart.SenderId));
+                    var relatedTargetObjects = _targetNetworkObjects.FindAll(x => x.TargetObjectId.Equals(receivedPackage.AddressPart.SenderId));
                     if (!relatedTargetObjects.Any())
                     {
                         // if no object is found, it denotes a problem with emulation config.
@@ -52,24 +52,24 @@ namespace CableCloud
                     }
 
                     relatedTargetObjects.All(x => { x.TargetSocket = socket; return true; } );
-                    TimeStamp.WriteLine("{0} using address {1} connected to cloud.", receivedPacket.AddressPart.SenderId, receivedPacket.AddressPart.CurrentIPAddress);
+                    TimeStamp.WriteLine("{0} using address {1} connected to cloud.", receivedPackage.AddressPart.SenderId, receivedPackage.AddressPart.CurrentIPAddress);
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine("Received \"Hello\" message from unrecognised object");
-                AddressPart addressPart = AddressPart.CreateMGMTAddressPart(_THIS_COMPONENT_NAME, receivedPacket.AddressPart.SenderId);
-                NetworkPacket networkPacket = NetworkPacket.CreateMGMTMessage(addressPart, "Object not recognised by cloud");
+                AddressPart addressPart = AddressPart.CreateMGMTAddressPart(_THIS_COMPONENT_NAME, receivedPackage.AddressPart.SenderId);
+                NetworkPackage networkPackage = NetworkPackage.CreateMGMTMessage(addressPart, "Object not recognised by cloud");
 
-                return ProcessorResponse.CreateProcessorResponse(socket, networkPacket);
+                return ProcessorResponse.CreateProcessorResponse(socket, networkPackage);
             }
 
-            return ProcessorResponse.CreateProcessorResponse(socket, receivedPacket);
+            return ProcessorResponse.CreateProcessorResponse(socket, receivedPackage);
         }
 
-        private ProcessorResponse ProcessMGMTMessage(Socket socket, NetworkPacket receivedPacket)
+        private ProcessorResponse ProcessMGMTMessage(Socket socket, NetworkPackage receivedPackage)
         {
-            if (receivedPacket.Message == "ROUTERS")
+            if (receivedPackage.Message == "ROUTERS")
             {
                 try
                 {
@@ -81,41 +81,41 @@ namespace CableCloud
                         .ToList();
 
                     //extracting list of sockets, one per router.
-                    return ProcessorResponse.CreateProcessorResponse(targets.Select(x => x.TargetSocket).ToList(), receivedPacket);
+                    return ProcessorResponse.CreateProcessorResponse(targets.Select(x => x.TargetSocket).ToList(), receivedPackage);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
-                    return ProcessorResponse.CreateDiscardingProcessorResponse(receivedPacket, "Broadcast MGMT failed");
+                    return ProcessorResponse.CreateDiscardingProcessorResponse(receivedPackage, "Broadcast MGMT failed");
                 }
             }
             else
             {
-                return ProcessorResponse.CreateDiscardingProcessorResponse(receivedPacket, "Unrecognised receiver / receivers group");
+                return ProcessorResponse.CreateDiscardingProcessorResponse(receivedPackage, "Unrecognised receiver / receivers group");
             }
         }
 
-        private ProcessorResponse ProcessClientToClientMessage(NetworkPacket receivedPacket)
+        private ProcessorResponse ProcessClientToClientMessage(NetworkPackage receivedPackage)
         {
-            TargetNetworkObject nextNetworkNode = _targetNetworkObjects.Find(x => x.InputPort == receivedPacket.AddressPart.CurrentPort);
+            TargetNetworkObject nextNetworkNode = _targetNetworkObjects.Find(x => x.InputPort == receivedPackage.AddressPart.CurrentPort);
             if (nextNetworkNode != null)
             {
-                TimeStamp.WriteLine("Received package from {0}", String.Concat(receivedPacket.AddressPart.CurrentIPAddress, ":", receivedPacket.AddressPart.CurrentPort));
+                TimeStamp.WriteLine("Received package from {0}", String.Concat(receivedPackage.AddressPart.CurrentIPAddress, ":", receivedPackage.AddressPart.CurrentPort));
                 if (nextNetworkNode.TargetSocket != null)
                 {
-                    receivedPacket.AddressPart.CurrentIPAddress = nextNetworkNode.TargetObjectAddress;
-                    receivedPacket.AddressPart.CurrentPort = nextNetworkNode.TargetPort;
+                    receivedPackage.AddressPart.CurrentIPAddress = nextNetworkNode.TargetObjectAddress;
+                    receivedPackage.AddressPart.CurrentPort = nextNetworkNode.TargetPort;
                     Console.WriteLine("{0} Passing packet to {1}", TimeStamp.TAB, String.Concat(nextNetworkNode.TargetObjectAddress, ":", nextNetworkNode.TargetPort));
-                    return ProcessorResponse.CreateProcessorResponse(nextNetworkNode.TargetSocket, receivedPacket);
+                    return ProcessorResponse.CreateProcessorResponse(nextNetworkNode.TargetSocket, receivedPackage);
                 }
                 else
                 {
-                    return ProcessorResponse.CreateDiscardingProcessorResponse(receivedPacket, String.Format("Socket for target node {0} is null", nextNetworkNode.TargetObjectId));
+                    return ProcessorResponse.CreateDiscardingProcessorResponse(receivedPackage, String.Format("Socket for target node {0} is null", nextNetworkNode.TargetObjectId));
                 }
             }
             else
             {
-                return ProcessorResponse.CreateDiscardingProcessorResponse(receivedPacket, String.Format("Target for port {0} not found. XML problem?", receivedPacket.AddressPart.CurrentPort));
+                return ProcessorResponse.CreateDiscardingProcessorResponse(receivedPackage, String.Format("Target for port {0} not found. XML problem?", receivedPackage.AddressPart.CurrentPort));
             }
         }
 

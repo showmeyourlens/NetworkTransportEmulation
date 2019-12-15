@@ -74,30 +74,30 @@ namespace ToolsLibrary
             }
         }
 
-        private byte[] SerializeMessage(NetworkPacket networkPacket)
+        private byte[] SerializeMessage(NetworkPackage networkPackage)
         {
             BinaryFormatter bf = new BinaryFormatter();
             using var memoryStream = new MemoryStream();
-            bf.Serialize(memoryStream, networkPacket);
+            bf.Serialize(memoryStream, networkPackage);
             return memoryStream.ToArray();
         }
 
-        private NetworkPacket DeserializeMessage(ReceiverState receiverState, int byteRead)
+        private NetworkPackage DeserializeMessage(ReceiverState receiverState, int byteRead)
         {
             using var memoryStream = new MemoryStream();
             var bf = new BinaryFormatter();
             memoryStream.Write(receiverState.Buffer, 0, byteRead);
             memoryStream.Seek(0, SeekOrigin.Begin);
-            NetworkPacket obj = (NetworkPacket)bf.Deserialize(memoryStream);
+            NetworkPackage obj = (NetworkPackage)bf.Deserialize(memoryStream);
             return obj;
         }
 
-        public void Send(NetworkPacket networkPacket)
+        public void Send(NetworkPackage networkPackage)
         {
             sendDone.Reset();
             ReceiverState state = new ReceiverState();
             state.WorkSocket = clientSocket;
-            state.Buffer = SerializeMessage(networkPacket);
+            state.Buffer = SerializeMessage(networkPackage);
             clientSocket.BeginSend(state.Buffer, 0, state.Buffer.Length, 0, new AsyncCallback(SendCallback), state);
             sendDone.WaitOne();
         }
@@ -128,16 +128,16 @@ namespace ToolsLibrary
             try
             {
                 int bytesRead = receiverState.WorkSocket.EndReceive(ar);
-                NetworkPacket networkPacket = DeserializeMessage(receiverState, bytesRead);
-                switch(networkPacket.MessageType)
+                NetworkPackage networkPackage = DeserializeMessage(receiverState, bytesRead);
+                switch(networkPackage.MessageType)
                 {
-                    case NetworkPacket.MessageTypes.ClientToClientMessage:
-                        ProcessReceivedClientMessage(networkPacket);
+                    case NetworkPackage.MessageTypes.ClientToClientMessage:
+                        ProcessReceivedClientMessage(networkPackage);
                         break;
-                    case NetworkPacket.MessageTypes.MGMTMessage:
-                        ProcessReceivedManagementMessage(networkPacket);
+                    case NetworkPackage.MessageTypes.MGMTMessage:
+                        ProcessReceivedManagementMessage(networkPackage);
                         break;
-                    case NetworkPacket.MessageTypes.NodeHelloMessage:
+                    case NetworkPackage.MessageTypes.NodeHelloMessage:
                         TimeStamp.WriteLine("Connected to CableCloud");
                         break;
                     default:
@@ -153,8 +153,8 @@ namespace ToolsLibrary
             }
         }
 
-        public abstract NetworkPacket CreateHelloMessage();
-        public abstract void ProcessReceivedClientMessage(NetworkPacket networkPacket);
-        public abstract void ProcessReceivedManagementMessage(NetworkPacket networkPacket);
+        public abstract NetworkPackage CreateHelloMessage();
+        public abstract void ProcessReceivedClientMessage(NetworkPackage networkPackage);
+        public abstract void ProcessReceivedManagementMessage(NetworkPackage networkPackage);
     }
 }
