@@ -75,34 +75,34 @@ namespace ToolsLibrary
             }
         }
 
-        private byte[] SerializeMessage(NetworkPackage networkPackage)
+        private byte[] SerializeMessage(NetworkPacket networkPacket)
         {
             BinaryFormatter bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
             {
-                bf.Serialize(ms, networkPackage);
+                bf.Serialize(ms, networkPacket);
                 return ms.ToArray();
             }
         }
 
-        private NetworkPackage DeserializeMessage(ReceiverState receiverState, int byteRead)
+        private NetworkPacket DeserializeMessage(ReceiverState receiverState, int byteRead)
         {
             using (var memoryStream = new MemoryStream())
             {
                 var bf = new BinaryFormatter();
                 memoryStream.Write(receiverState.Buffer, 0, byteRead);
                 memoryStream.Seek(0, SeekOrigin.Begin);
-                NetworkPackage obj = (NetworkPackage)bf.Deserialize(memoryStream);
+                NetworkPacket obj = (NetworkPacket)bf.Deserialize(memoryStream);
                 return obj;
             }
         }
 
-        public void Send(NetworkPackage networkPackage)
+        public void Send(NetworkPacket networkPacket)
         {
             sendDone.Reset();
             ReceiverState state = new ReceiverState();
             state.WorkSocket = clientSocket;
-            state.Buffer = SerializeMessage(networkPackage);
+            state.Buffer = SerializeMessage(networkPacket);
             clientSocket.BeginSend(state.Buffer, 0, state.Buffer.Length, 0, new AsyncCallback(SendCallback), state);
             sendDone.WaitOne();
         }
@@ -133,18 +133,18 @@ namespace ToolsLibrary
             try 
             { 
                 int bytesRead = receiverState.WorkSocket.EndReceive(ar);
-                NetworkPackage networkPackage = DeserializeMessage(receiverState, bytesRead);
-                if (networkPackage.MessageType.Equals(NetworkPackage.MessageTypes.NodeHelloMessage))
+                NetworkPacket networkPacket = DeserializeMessage(receiverState, bytesRead);
+                if (networkPacket.MessageType.Equals(NetworkPacket.MessageTypes.NodeHelloMessage))
                 {
                     TimeStamp.WriteLine("Connected to cloud");
                 }
-                if (networkPackage.MessageType.Equals(NetworkPackage.MessageTypes.MGMTMessage))
+                if (networkPacket.MessageType.Equals(NetworkPacket.MessageTypes.MGMTMessage))
                 {
-                    ProcessReceivedManagementMessage(networkPackage);
+                    ProcessReceivedManagementMessage(networkPacket);
                 }
-                if (networkPackage.MessageType.Equals(NetworkPackage.MessageTypes.ClientToClientMessage))
+                if (networkPacket.MessageType.Equals(NetworkPacket.MessageTypes.ClientToClientMessage))
                 {
-                    ProcessReceivedClientMessage(networkPackage);
+                    ProcessReceivedClientMessage(networkPacket);
                 }
                 receiverState.WorkSocket.BeginReceive(receiverState.Buffer, 0, receiverState.Buffer.Length, 0, new AsyncCallback(ReceiveCallback), receiverState);
             }
@@ -154,18 +154,18 @@ namespace ToolsLibrary
             }
         }
 
-        private NetworkPackage CreateHelloMessage()
+        private NetworkPacket CreateHelloMessage()
         {
             AddressPart addressPart = AddressPart.CreateNetworkHelloAddressPart(CLIENT_EMULATION_NAME, CLIENT_EMULATION_ADDRESS);
-            return NetworkPackage.CreateNodeHello(addressPart);
+            return NetworkPacket.CreateNodeHello(addressPart);
         }
-        private void ProcessReceivedClientMessage(NetworkPackage networkPackage)
+        private void ProcessReceivedClientMessage(NetworkPacket networkPacket)
         {
-            TimeStamp.WriteLine("Received message from {0}. Message: {1}", networkPackage.addressPart.senderId, networkPackage.message);
+            TimeStamp.WriteLine("Received message from {0}. Message: {1}", networkPacket.addressPart.senderId, networkPacket.message);
         }
-        private void ProcessReceivedManagementMessage(NetworkPackage networkPackage)
+        private void ProcessReceivedManagementMessage(NetworkPacket networkPacket)
         {
-            TimeStamp.WriteLine(networkPackage.message);
+            TimeStamp.WriteLine(networkPacket.message);
         }
     }
 }

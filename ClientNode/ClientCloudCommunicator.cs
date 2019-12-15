@@ -21,16 +21,16 @@ namespace ClientNode
             NODE_EMULATION_PORT = Int32.Parse(nodeEmulationPort);
         }
 
-        public override NetworkPackage CreateHelloMessage()
+        public override NetworkPacket CreateHelloMessage()
         {
             AddressPart addressPart = AddressPart.CreateNetworkHelloAddressPart(NODE_EMULATION_ID, NODE_EMULATION_ADDRESS);
-            return NetworkPackage.CreateNodeHello(addressPart);
+            return NetworkPacket.CreateNodeHello(addressPart);
         }
 
-        public override void ProcessReceivedClientMessage(NetworkPackage networkPackage) 
-            => TimeStamp.WriteLine("Received message from {0}. Message: {1}", networkPackage.AddressPart.SenderId, networkPackage.Message);
+        public override void ProcessReceivedClientMessage(NetworkPacket networkPacket) 
+            => TimeStamp.WriteLine("Received message from {0}. Message: {1}", networkPacket.AddressPart.SenderId, networkPacket.Message);
 
-        public override void ProcessReceivedManagementMessage(NetworkPackage networkPackage) 
-            => TimeStamp.WriteLine(networkPackage.Message);
+        public override void ProcessReceivedManagementMessage(NetworkPacket networkPacket) 
+            => TimeStamp.WriteLine(networkPacket.Message);
     }
 }

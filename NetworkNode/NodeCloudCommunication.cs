@@ -29,36 +29,36 @@ namespace NetworkNode
             this.isRouterUp = true;
         }
 
-        public override NetworkPackage CreateHelloMessage()
+        public override NetworkPacket CreateHelloMessage()
         {
             AddressPart addressPart = AddressPart.CreateNetworkHelloAddressPart(NODE_EMULATION_ID, NODE_EMULATION_ADDRESS);
-            return NetworkPackage.CreateNodeHello(addressPart);
+            return NetworkPacket.CreateNodeHello(addressPart);
         }
-        public override void ProcessReceivedClientMessage(NetworkPackage networkPackage)
+        public override void ProcessReceivedClientMessage(NetworkPacket networkPacket)
         {
-            TimeStamp.WriteLine("Received packet to {0} on port {1}", networkPackage.AddressPart.ReceiverIPAddress, networkPackage.AddressPart.CurrentPort);
+            TimeStamp.WriteLine("Received packet to {0} on port {1}", networkPacket.AddressPart.ReceiverIPAddress, networkPacket.AddressPart.CurrentPort);
             // RISKY - if message from client, add label "0" (e.g. assume there is one)
-            if (networkPackage.LabelStack.Count == 0)
+            if (networkPacket.LabelStack.Count == 0)
             {
-                networkPackage.LabelStack.Push(0);
+                networkPacket.LabelStack.Push(0);
             }
 
-            int topLabel = networkPackage.LabelStack.Peek();
+            int topLabel = networkPacket.LabelStack.Peek();
             
-            RouterLabel routerLabel = routingInfo.routerLabels.Find(x => x.inputPort == networkPackage.AddressPart.CurrentPort && x.label == topLabel);
+            RouterLabel routerLabel = routingInfo.routerLabels.Find(x => x.inputPort == networkPacket.AddressPart.CurrentPort && x.label == topLabel);
             RouterAction action = routerLabel != null ? routingInfo.routerActions.Find(x => x.actionId == routerLabel.action) : null;
             
             
-            if (DoSelectedAction(action, networkPackage))
+            if (DoSelectedAction(action, networkPacket))
             {
-                Console.WriteLine("{0} Passing packet on port {1}.", TimeStamp.TAB, networkPackage.AddressPart.CurrentPort);
-                Send(networkPackage);
+                Console.WriteLine("{0} Passing packet on port {1}.", TimeStamp.TAB, networkPacket.AddressPart.CurrentPort);
+                Send(networkPacket);
             }
             
         }
-        public override void ProcessReceivedManagementMessage(NetworkPackage networkPackage)
+        public override void ProcessReceivedManagementMessage(NetworkPacket networkPacket)
         {
-            if (networkPackage.Message.Equals("ROUTING_SCHEME_2"))
+            if (networkPacket.Message.Equals("ROUTING_SCHEME_2"))
             {
                 TimeStamp.WriteLine("MANAGEMENT MESSAGE: upload new forwarding table");
                 routingInfo = Reader.ReadFIB("ManagementSystem2.xml", NODE_EMULATION_ID);
@@ -66,7 +66,7 @@ namespace NetworkNode
             }
         }
 
-        private bool DoSelectedAction(RouterAction action, NetworkPackage networkPackage)
+        private bool DoSelectedAction(RouterAction action, NetworkPacket networkPacket)
         {
             if (action == null)
             {
@@ -78,18 +78,18 @@ namespace NetworkNode
                 switch (action.actionString)
                 {
                     case "POP":
-                        int deletedLabel = networkPackage.LabelStack.Pop();
-                        Console.WriteLine("{0} Deleted label {1}, considering label {2}", TimeStamp.TAB, deletedLabel, networkPackage.LabelStack.Peek());
-                        action = routingInfo.routerActions.Find(x => x.actionId == routingInfo.routerLabels.Find(y => y.label == networkPackage.LabelStack.Peek()).action);
-                        DoSelectedAction(action, networkPackage);
+                        int deletedLabel = networkPacket.LabelStack.Pop();
+                        Console.WriteLine("{0} Deleted label {1}, considering label {2}", TimeStamp.TAB, deletedLabel, networkPacket.LabelStack.Peek());
+                        action = routingInfo.routerActions.Find(x => x.actionId == routingInfo.routerLabels.Find(y => y.label == networkPacket.LabelStack.Peek()).action);
+                        DoSelectedAction(action, networkPacket);
                         break;
                     case "SWAP":
-                        Console.WriteLine("{0} Label {1} switched to {2}", TimeStamp.TAB, networkPackage.LabelStack.Pop(), action.outLabel);
-                        networkPackage.LabelStack.Push(action.outLabel);
+                        Console.WriteLine("{0} Label {1} switched to {2}", TimeStamp.TAB, networkPacket.LabelStack.Pop(), action.outLabel);
+                        networkPacket.LabelStack.Push(action.outLabel);
                         break;
                     case "PUSH":
                         Console.WriteLine("{0} Added label {1}", TimeStamp.TAB, action.outLabel);
-                        networkPackage.LabelStack.Push(action.outLabel);
+                        networkPacket.LabelStack.Push(action.outLabel);
                         break;
                 }
             }
@@ -102,12 +102,12 @@ namespace NetworkNode
             }
             if(action.nextActionId != 0)
             {
-                DoSelectedAction(routingInfo.routerActions.Find(x => x.actionId == action.nextActionId), networkPackage);
+                DoSelectedAction(routingInfo.routerActions.Find(x => x.actionId == action.nextActionId), networkPacket);
             }
             if(action.outPort != 0)
             {
-                networkPackage.AddressPart.CurrentPort = action.outPort;
-                networkPackage.AddressPart.CurrentIPAddress = NODE_EMULATION_ADDRESS;
+                networkPacket.AddressPart.CurrentPort = action.outPort;
+                networkPacket.AddressPart.CurrentIPAddress = NODE_EMULATION_ADDRESS;
             }
             return true;
 
