@@ -1,8 +1,0 @@
-{
-  "runtimeOptions": {
-    "additionalProbingPaths": [
-      "C:\\Users\\Cross\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\Cross\\.nuget\\packages"
-    ]
-  }
-}

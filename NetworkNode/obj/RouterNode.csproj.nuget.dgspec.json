@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Cross\\Downloads\\TSST_MPLS\\TSST_MPLS\\ClientNode\\ClientNode.csproj": {}
+    "C:\\Users\\Cross\\Downloads\\TSST_MPLS\\TSST_MPLS\\NetworkNode\\RouterNode.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Cross\\Downloads\\TSST_MPLS\\TSST_MPLS\\ClientNode\\ClientNode.csproj": {
+    "C:\\Users\\Cross\\Downloads\\TSST_MPLS\\TSST_MPLS\\NetworkNode\\RouterNode.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Cross\\Downloads\\TSST_MPLS\\TSST_MPLS\\ClientNode\\ClientNode.csproj",
-        "projectName": "ClientNode",
-        "projectPath": "C:\\Users\\Cross\\Downloads\\TSST_MPLS\\TSST_MPLS\\ClientNode\\ClientNode.csproj",
+        "projectUniqueName": "C:\\Users\\Cross\\Downloads\\TSST_MPLS\\TSST_MPLS\\NetworkNode\\RouterNode.csproj",
+        "projectName": "RouterNode",
+        "projectPath": "C:\\Users\\Cross\\Downloads\\TSST_MPLS\\TSST_MPLS\\NetworkNode\\RouterNode.csproj",
         "packagesPath": "C:\\Users\\Cross\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Cross\\Downloads\\TSST_MPLS\\TSST_MPLS\\ClientNode\\obj\\",
+        "outputPath": "C:\\Users\\Cross\\Downloads\\TSST_MPLS\\TSST_MPLS\\NetworkNode\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Cross\\AppData\\Roaming\\NuGet\\NuGet.Config",
