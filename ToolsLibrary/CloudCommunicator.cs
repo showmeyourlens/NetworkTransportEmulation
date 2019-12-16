@@ -10,22 +10,18 @@ namespace ToolsLibrary
 {
     public abstract class CloudCommunicator
     {
-        public IPAddress instanceAddress;
+        private readonly IPAddress instanceAddress;
         public int instancePort;
         private Socket cloudSocket;
         private Socket clientSocket;
         public ManualResetEvent sendDone;
-        public int cloudPort;
-        public string NODE_EMULATION_ID;
-        public string NODE_EMULATION_ADDRESS;
+        private readonly int cloudPort;
 
-        public CloudCommunicator(string instancePort, string nodeId, string nodeEmulationAddress)
+        public CloudCommunicator(string instancePort)
         {
             this.instanceAddress = IPAddress.Parse("127.0.0.1");
             this.cloudPort = 62572;
             this.instancePort = Int32.Parse(instancePort);
-            this.NODE_EMULATION_ID = nodeId;
-            this.NODE_EMULATION_ADDRESS = nodeEmulationAddress;
             this.sendDone = new ManualResetEvent(false);
         }
         public void Start()

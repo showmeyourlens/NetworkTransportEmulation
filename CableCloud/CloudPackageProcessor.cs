@@ -97,20 +97,20 @@ namespace CableCloud
 
         private ProcessorResponse ProcessClientToClientMessage(NetworkPacket receivedPacket)
         {
-            TargetNetworkObject nextNetworkNode = _targetNetworkObjects.Find(x => x.InputPort == receivedPacket.AddressPart.CurrentPort);
-            if (nextNetworkNode != null)
+            TargetNetworkObject nextRouterNode = _targetNetworkObjects.Find(x => x.InputPort == receivedPacket.AddressPart.CurrentPort);
+            if (nextRouterNode != null)
             {
                 TimeStamp.WriteLine("Received package from {0}", String.Concat(receivedPacket.AddressPart.CurrentIPAddress, ":", receivedPacket.AddressPart.CurrentPort));
-                if (nextNetworkNode.TargetSocket != null)
+                if (nextRouterNode.TargetSocket != null)
                 {
-                    receivedPacket.AddressPart.CurrentIPAddress = nextNetworkNode.TargetObjectAddress;
-                    receivedPacket.AddressPart.CurrentPort = nextNetworkNode.TargetPort;
-                    Console.WriteLine("{0} Passing packet to {1}", TimeStamp.TAB, String.Concat(nextNetworkNode.TargetObjectAddress, ":", nextNetworkNode.TargetPort));
-                    return ProcessorResponse.CreateProcessorResponse(nextNetworkNode.TargetSocket, receivedPacket);
+                    receivedPacket.AddressPart.CurrentIPAddress = nextRouterNode.TargetObjectAddress;
+                    receivedPacket.AddressPart.CurrentPort = nextRouterNode.TargetPort;
+                    Console.WriteLine("{0} Passing packet to {1}", TimeStamp.TAB, String.Concat(nextRouterNode.TargetObjectAddress, ":", nextRouterNode.TargetPort));
+                    return ProcessorResponse.CreateProcessorResponse(nextRouterNode.TargetSocket, receivedPacket);
                 }
                 else
                 {
-                    return ProcessorResponse.CreateDiscardingProcessorResponse(receivedPacket, String.Format("Socket for target node {0} is null", nextNetworkNode.TargetObjectId));
+                    return ProcessorResponse.CreateDiscardingProcessorResponse(receivedPacket, String.Format("Socket for target node {0} is null", nextRouterNode.TargetObjectId));
                 }
             }
             else

@@ -10,7 +10,7 @@ namespace TSST_MPLS
 {
     class ClientNode
     {
-        public List<ClientSenderConfig> contactList;
+        private List<ClientSenderConfig> _contactList;
         static void Main(string[] args)
         {
             ClientNode clientNode = new ClientNode();
@@ -20,14 +20,19 @@ namespace TSST_MPLS
                 return;
             }
 
-            clientNode.contactList = clientNode.CreateDumbClientConfig(args[1]);
+            string instancePort = args[0];
+            string nodeId = args[1];
+            string nodeEmulationAddress = args[2];
+            string nodeEmulationPort = args[3];
 
-            ClientCloudCommunicator cloudCommunicator = new ClientCloudCommunicator(args[0], args[1], args[2], args[3]);
+            clientNode._contactList = clientNode.CreateDumbClientConfig(nodeId);
+
+            ClientCloudCommunicator cloudCommunicator = new ClientCloudCommunicator(instancePort, nodeId, nodeEmulationAddress, nodeEmulationPort);
             
             Console.WriteLine("Starting client node with following parameters:");
-            Console.WriteLine("Address on device: {0}:{1}", cloudCommunicator.instanceAddress, cloudCommunicator.instancePort);
-            Console.WriteLine("Address in emulated network: {0}:{1}", cloudCommunicator.NODE_EMULATION_ADDRESS, cloudCommunicator.NODE_EMULATION_PORT);
-            Console.WriteLine("Node identificator: {0}", cloudCommunicator.NODE_EMULATION_ID);
+            Console.WriteLine("Address on device: {0}:{1}", "127.0.0.1", cloudCommunicator.instancePort);
+            Console.WriteLine("Address in emulated network: {0}:{1}", nodeEmulationAddress, nodeEmulationPort);
+            Console.WriteLine("Node identificator: {0}", nodeId);
             
             try
             {
@@ -39,13 +44,13 @@ namespace TSST_MPLS
                 while (isFinish)
                 {
                     key = Console.ReadKey().KeyChar;
-                    ClientSenderConfig contact = clientNode.contactList.FirstOrDefault(x => x.key == key);
+                    ClientSenderConfig contact = clientNode._contactList.FirstOrDefault(x => x.key == key);
                     if (contact != null)
                     {
                         AddressPart addressPart = AddressPart.CreateNetworkAddressPart(
-                            cloudCommunicator.NODE_EMULATION_ID,
+                            nodeId,
                             contact.receiverId,
-                            cloudCommunicator.NODE_EMULATION_ADDRESS,
+                            nodeEmulationAddress,
                             contact.receiverIPAddress,
                             cloudCommunicator.NODE_EMULATION_PORT);
                         NetworkPacket networkPacket = NetworkPacket.CreateClientToClientMessage(

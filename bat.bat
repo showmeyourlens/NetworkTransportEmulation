@@ -8,13 +8,13 @@ start .\ClientNode\bin\Debug\netcoreapp3.0\ClientNode.exe "62333" "C3" "148.58.1
 ping 192.0.2.1 -n 1 -w 100 >nul
 start .\ClientNode\bin\Debug\netcoreapp3.0\ClientNode.exe "62334" "C4" "132.41.56.205" "410"
 ping 192.0.2.1 -n 1 -w 100 >nul
-start .\NetworkNode\bin\Debug\netcoreapp3.0\NetworkNode.exe "62337" "N1" "167.15.64.182"
+start .\RouterNode\bin\Debug\netcoreapp3.0\RouterNode.exe "62337" "N1" "167.15.64.182"
 ping 192.0.2.1 -n 1 -w 100 >nul
-start .\NetworkNode\bin\Debug\netcoreapp3.0\NetworkNode.exe "62338" "N2" "196.221.13.245"
+start .\RouterNode\bin\Debug\netcoreapp3.0\RouterNode.exe "62338" "N2" "196.221.13.245"
 ping 192.0.2.1 -n 1 -w 100 >nul
-start .\NetworkNode\bin\Debug\netcoreapp3.0\NetworkNode.exe "62339" "N3" "197.25.131.29"
+start .\RouterNode\bin\Debug\netcoreapp3.0\RouterNode.exe "62339" "N3" "197.25.131.29"
 ping 192.0.2.1 -n 1 -w 100 >nul
-start .\NetworkNode\bin\Debug\netcoreapp3.0\NetworkNode.exe "62340" "N4" "191.27.135.99"
+start .\RouterNode\bin\Debug\netcoreapp3.0\RouterNode.exe "62340" "N4" "191.27.135.99"
 ping 192.0.2.1 -n 1 -w 100 >nul
-start .\NetworkNode\bin\Debug\netcoreapp3.0\NetworkNode.exe "62341" "N5" "187.83.2.221"
+start .\RouterNode\bin\Debug\netcoreapp3.0\RouterNode.exe "62341" "N5" "187.83.2.221"
 ping 192.0.2.1 -n 1 -w 100 >nul

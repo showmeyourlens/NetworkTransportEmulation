@@ -10,14 +10,13 @@ namespace ClientNode
 {
     public class ClientCloudCommunicator : CloudCommunicator
     {
-        public int NODE_EMULATION_PORT;
-        public ClientCloudCommunicator(string instancePort, string nodeId, string nodeEmulationAddress, string nodeEmulationPort) : base(instancePort, nodeId, nodeEmulationAddress)
+        private readonly string NODE_EMULATION_ID;
+        private readonly string NODE_EMULATION_ADDRESS;
+        public readonly int NODE_EMULATION_PORT;
+        public ClientCloudCommunicator(string instancePort, string nodeId, string nodeEmulationAddress, string nodeEmulationPort) : base(instancePort)
         {
-            base.instanceAddress = IPAddress.Parse("127.0.0.1");
-            base.cloudPort = 62572;
-            base.instancePort = Int32.Parse(instancePort);
-            base.NODE_EMULATION_ID = nodeId;
-            base.NODE_EMULATION_ADDRESS = nodeEmulationAddress;
+            NODE_EMULATION_ID = nodeId;
+            NODE_EMULATION_ADDRESS = nodeEmulationAddress;
             NODE_EMULATION_PORT = Int32.Parse(nodeEmulationPort);
         }
 
