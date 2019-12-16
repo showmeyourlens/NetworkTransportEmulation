@@ -26,3 +26,5 @@ Represents device connected to network. This node is capable of creating packets
 ## RouterNode
 Has loaded FIB table that tells what action to perform when receiving packet with specific port and label. Action includes label switching, adding and deleting. Action (or actions chain) ends with passing packet to Cloud with port number changed.
 
+# I want to try it!
+Sure. Run bat.bat. Then find a ClientNode window and try to send a message to other client. You can see what appears in other windows (e.g routers, cloud and of course target client). You can see network topology in Topology.jpg
